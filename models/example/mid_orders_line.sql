@@ -1,26 +1,29 @@
-SELECT
-    li.order_item_key,
-    o.order_key,
-    o.customer_key,
-    o.order_date,
-    li.status_code AS order_status_code,
-    li.part_key,
-    li.supplier_key,
-    li.return_flag,
-    li.line_number,
-    li.ship_date,
-    li.commit_date,
-    li.receipt_date,
-    li.ship_mode,
-    li.extended_price / NULLIF(li.quantity, 0) AS item_price, --precio base por artículo en una línea de pedido
-    li.discount_percentage,
-    (li.extended_price * (1 - li.discount_percentage)) AS item_discounted_price, -- precio descontado por artículo en una línea de pedido
-    li.extended_price,-- precio total articulo sin descuentos
-    li.tax_rate,--tasa impuestos artículo
-    ((li.extended_price + (-1 * li.extended_price * li.discount_percentage)) * li.tax_rate) AS item_tax_amount, -- cantidad total del impuesto calculado sobre el precio del artículo después de aplicar cualquier descuento
-FROM
-    tpch.orders o
-JOIN
-    tpch.lineitem li ON o.order_key = li.order_key
-ORDER BY
-    o.order_date;
+with mid_orders_line AS(
+    SELECT
+        li.L_ORDERKEY,
+        o.O_ORDERKEY,
+        o.O_CUSTKEY,
+        o.O_ORDERDATE,
+        li.L_LINESTATUS AS order_status_code,
+        li.L_PARTKEY,
+        li.L_SUPPKEY,
+        li.L_RETURNFLAG,
+        li.L_LINENUMBER,
+        li.L_SHIPDATE,
+        li.L_COMMITDATE,
+        li.L_RECEIPTDATE,
+        li.L_SHIPMODE,
+        li.L_EXTENDEDPRICE / NULLIF(li.L_QUANTITY, 0) AS item_price, --precio base por artículo en una línea de pedido
+        li.L_DISCOUNT,
+        (li.L_EXTENDEDPRICE * (1 - li.L_DISCOUNT)) AS item_discounted_price, -- precio descontado por artículo en una línea de pedido
+        li.L_EXTENDEDPRICE,-- precio total articulo sin descuentos
+        li.L_TAX,--tasa impuestos artículo
+        ((li.L_EXTENDEDPRICE + (-1 * li.L_EXTENDEDPRICE * li.L_DISCOUNT)) * li.L_TAX) AS item_tax_amount -- cantidad total del impuesto calculado sobre el precio del artículo después de aplicar cualquier descuento
+    FROM
+        tpch.orders o
+    JOIN
+        tpch.lineitem li ON o.O_ORDERKEY = li.L_ORDERKEY
+    ORDER BY
+        o.O_ORDERDATE
+)
+SELECT * FROM mid_orders_line
