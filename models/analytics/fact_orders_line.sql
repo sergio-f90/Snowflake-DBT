@@ -1,7 +1,8 @@
+{{ config(materialized = 'table') }}
+
 WITH orders_line_agg AS (
     SELECT 
         ol.O_ORDERKEY,
-        COUNT(*) AS total_items_per_order,
         AVG(ol.item_discounted_price) AS avg_discounted_price,
         SUM(ol.item_discounted_price) AS item_discounted_amount,
         SUM(ol.item_tax_amount) AS item_tax_amount
