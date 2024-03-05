@@ -18,14 +18,24 @@ SELECT
     p.P_TYPE AS PART_TYPE,
     p.P_SIZE AS PART_SIZE,
     p.P_CONTAINER AS PART_CONTAINER,
-    ps.PS_SUPPLYCOST
+    ps.PS_SUPPLYCOST,
+    --calcular el total de ventas por cliente
+    SUM(fo.ORDER_COUNT * (p.P_RETAILPRICE - fo.ITEM_DISCOUNTED_AMOUNT)) OVER (PARTITION BY c.C_CUSTKEY) AS total_sales_per_customer,
+    -- Calcular el promedio de cantidad del impuesto por orden
+    AVG(fo.ITEM_TAX_AMOUNT) OVER () AS avg_tax_amount_per_order,
+    -- Clasificar las órdenes por fecha
+    RANK() OVER (ORDER BY fo.O_ORDERDATE) AS order_date_rank
 FROM
     FACT_ORDERS_LINE fo
 JOIN
     CUSTOMER c ON fo.O_CUSTKEY = c.C_CUSTKEY
 JOIN
-    PART p ON fo.O_CUSTKEY  = p.P_PARTKEY
+    LINEITEM li ON fo.O_ORDERKEY = li.L_ORDERKEY
+JOIN
+    PART p ON li.L_PARTKEY = p.P_PARTKEY
 JOIN
     PARTSUPP ps ON p.P_PARTKEY = ps.PS_PARTKEY
+WHERE
+    fo.O_ORDERSTATUS = 'F'  -- Filtrar solo las órdenes Finalizadas
 ORDER BY
     fo.O_ORDERDATE
