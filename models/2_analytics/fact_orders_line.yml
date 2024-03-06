@@ -1,0 +1,56 @@
+version: 2
+
+models:
+
+    - name: fct_orders_line
+      columns:
+          - name: o_orderkey
+            description: unique key for each order from source system
+            tests:
+                - unique
+                - not_null
+
+          - name: o_orderdate
+            description: date the order was placed
+            tests:
+                - not_null 
+
+          - name: o_custkey
+            description: reference to `dim_customers`
+            tests:
+                - not_null                
+                - relationships:
+                    to: ref('dim_customers')
+                    field: o_custkey
+                    
+          - name: o_orderstatus
+            tests:
+                - not_null
+                
+          - name: o_orderpriority
+            tests:
+                - not_null
+                
+          - name: o_clerk
+            tests:
+                - not_null
+                
+          - name: o_shippriority
+            tests:
+                - not_null
+                                
+                
+          - name: item_discounted_amount
+            description: discount amount for the order
+            tests:
+                - not_null
+                
+          - name: item_tax_amount
+            description: tax amount for the order
+            tests:
+                - not_null
+                
+          - name: avg_discounted_price
+            description: average  discount amount for order 
+            tests:
+                - not_null
