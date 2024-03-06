@@ -21,7 +21,8 @@ SELECT
     o.o_shippriority,
     1 AS order_count,                
     ol.item_discounted_amount,
-    ol.item_tax_amount
+    ol.item_tax_amount,
+    ol.avg_discounted_price
 FROM
     tpch.orders o
 INNER JOIN 
