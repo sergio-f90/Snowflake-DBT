@@ -1,0 +1,156 @@
+version: 2
+
+sources:
+  - name: tpch
+    database: raw
+    schema: tpch_sf1
+    tables:
+      - name: customer
+        columns:
+          - name: c_custkey
+            description: "unique customer key"
+            tests:
+              - unique:
+                  severity: warn
+              - not_null:
+                  severity: warn
+          - name: c_name
+          - name: c_address
+            meta:
+              masking_policy: temp
+          - name: c_nationkey
+          - name: c_phone
+          - name: c_acctbal
+          - name: c_mktsegment
+
+      - name: lineitem
+        columns:
+          - name: l_orderkey
+            description: FK a O_ORDERKEY
+            tests:
+              - relationships:
+                  to: source('tpch', 'orders')
+                  field: o_orderkey
+          - name: l_partkey
+            description:  FK a P_PARTKEY, 1 FK a (PS_PARTKEY,PS_SUPPKEY) con L_SUPPKEY
+            tests:
+              - relationships:
+                  to: source('tpch', 'part')
+                  field: p_partkey
+          - name: l_suppkey
+            description: FK a S_SUPPKEY, 2 FK a (PS_PARTKEY, PS_SUPPKEY) con L_PARTKEY
+            tests:
+              - relationships:
+                  to: source('tpch', 'supplier')
+                  field: s_suppkey
+          - name: l_linenumber
+          - name: l_quantity
+          - name: l_extendedprice
+          - name: l_discount
+          - name: l_tax
+          - name: l_returnflag
+          - name: l_linestatus
+          - name: l_shipdate
+          - name: l_commitdate
+          - name: l_receiptdate
+          - name: l_shipinstruct
+          - name: l_shipmode
+
+      - name: nation
+        columns:
+          - name: n_nationkey
+            tests:
+              - unique:
+                  severity: warn
+              - not_null:
+                  severity: warn
+          - name: n_name
+          - name: n_regionkey
+            tests:
+              - relationships:
+                  to: source('tpch', 'region')
+                  field: r_regionkey
+
+      - name: orders
+        columns:
+          - name: o_orderkey
+            tests: 
+              - unique:
+                  severity: warn
+              - not_null:
+                  severity: warn
+          - name: o_custkey
+            description: Foreign Key to C_CUSTKEY
+            tests:
+              - relationships:
+                  to: source('tpch', 'customer')
+                  field: c_custkey
+          - name: o_orderstatus
+          - name: o_totalprice
+          - name: o_orderdate
+          - name: o_orderpriority
+          - name: o_clerk
+          - name: o_shippriority
+
+      - name: part
+        columns:
+          - name: p_partkey
+            tests:
+              - unique:
+                  severity: warn
+              - not_null:
+                  severity: warn
+          - name: p_name
+          - name: p_mfgr
+          - name: p_brand
+          - name: p_type
+          - name: p_size
+          - name: p_container
+          - name: p_retailprice
+
+      - name: partsupp
+        columns:
+          - name: ps_partkey
+            description: Foreign Key to P_PARTKEY
+            tests:
+              - relationships:
+                  to: source('tpch', 'part')
+                  field: p_partkey
+          - name: ps_suppkey
+            description: Foreign Key to S_SUPPKEY
+            tests:
+              - relationships:
+                  to: source('tpch', 'supplier')
+                  field: s_suppkey
+          - name: ps_availqty
+          - name: ps_supplycost
+
+      - name: region
+        columns:
+          - name: r_regionkey
+            tests:
+              - unique:
+                  severity: warn
+              - not_null:
+                  severity: warn
+          - name: r_name
+
+      - name: supplier
+        columns:
+          - name: s_suppkey
+            tests:
+              - unique:
+                  severity: warn
+              - not_null:
+                  severity: warn
+          - name: s_name
+          - name: s_address
+          - name: s_nationkey
+            description: Foreign Key to N_NATIONKEY
+            tests:
+              - relationships:
+                  to: source('tpch', 'nation')
+                  field: n_nationkey
+          - name: s_phone
+          - name: s_acctbal
+          

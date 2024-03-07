@@ -20,9 +20,9 @@ SELECT
     p.P_CONTAINER AS PART_CONTAINER,
     ps.PS_SUPPLYCOST,
     -- Calcular el total de ventas por artículo
-    SUM(fo.ORDER_COUNT * (p.P_RETAILPRICE - fo.ITEM_DISCOUNTED_AMOUNT)) OVER (PARTITION BY p.P_PARTKEY) AS total_sales_per_part,
+    SUM(fo.ORDER_COUNT * (p.P_RETAILPRICE - fo.ITEM_DISCOUNTED_AMOUNT)) OVER (PARTITION BY p.part_key) AS total_sales_per_part,
     -- Calcular el promedio del costo de suministro por proveedor
-    AVG(ps.PS_SUPPLYCOST) OVER (PARTITION BY s.S_SUPPKEY) AS avg_supply_cost_per_supplier
+    AVG(ps.PS_SUPPLYCOST) OVER (PARTITION BY s.supplier_key) AS avg_supply_cost_per_supplier
 FROM
     FACT_ORDERS_LINE fo
 JOIN
@@ -30,11 +30,11 @@ JOIN
 JOIN
     LINEITEM li ON fo.O_ORDERKEY = li.L_ORDERKEY
 JOIN
-    PART p ON li.L_PARTKEY = p.P_PARTKEY
+    PART p ON li.L_PARTKEY = p.part_key
 JOIN
-    PARTSUPP ps ON p.P_PARTKEY = ps.PS_PARTKEY
+    PARTSUPP ps ON p.part_key = ps.part_key
 JOIN
-    SUPPLIER s ON ps.PS_SUPPKEY = s.S_SUPPKEY
+    SUPPLIER s ON ps.supplier_key = s.supplier_key
 WHERE
     fo.O_ORDERSTATUS = 'F'  -- Filtrar solo las órdenes enviadas
     AND fo.O_ORDERDATE >= DATEADD(DAY, -7, CURRENT_DATE())  -- Filtrar órdenes de la última semana

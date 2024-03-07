@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: customer
+    columns:
+      - name: c_custkey
+        tests:
+          - unique
+          - not_null
+                
+  - name: lineitem
+    columns:
+      - name: L_ORDERKEY
+        tests:
+          - unique
+          - not_null
+
+  - name: nation
+    columns:
+      - name: n_nationkey
+        tests:
+          - unique
+          - not_null
+                
+  - name: orders
+    columns:
+      - name: o_orderkey
+        tests:
+          - unique
+          - not_null
+
+  - name: partsupp
+    columns:
+      - name: part_supplier_key
+        tests:
+          - unique
+          - not_null
+                
+  - name: part
+    columns:
+      - name: p_partkey
+        tests:
+          - unique
+          - not_null
+
+  - name: region
+    columns:
+      - name: r_regionkey
+        tests:
+          - unique
+          - not_null
+                
+  - name: supplier
+    columns:
+      - name: s_supplierkey
+        tests:
+          - unique
+          - not_null

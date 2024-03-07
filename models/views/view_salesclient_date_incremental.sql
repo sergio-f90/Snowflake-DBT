@@ -32,9 +32,9 @@ JOIN
 JOIN
     LINEITEM li ON fo.O_ORDERKEY = li.L_ORDERKEY
 JOIN
-    PART p ON li.L_PARTKEY = p.P_PARTKEY
+    PART p ON li.L_PARTKEY = p.part_key
 JOIN
-    PARTSUPP ps ON p.P_PARTKEY = ps.PS_PARTKEY
+    PARTSUPP ps ON p.part_key = ps.part_key
 WHERE
     fo.O_ORDERSTATUS = 'F'  -- Filtrar solo las órdenes Finalizadas
     AND fo.O_ORDERDATE >= DATEADD(DAY, -1, CURRENT_DATE())  -- Filtrar solo órdenes de la última fecha

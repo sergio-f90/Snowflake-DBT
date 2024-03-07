@@ -24,8 +24,8 @@ FROM
 JOIN
     CUSTOMER c ON fo.O_CUSTKEY = c.C_CUSTKEY
 JOIN
-    PART p ON fo.O_CUSTKEY  = p.P_PARTKEY
+    PART p ON fo.O_CUSTKEY  = p.part_key
 JOIN
-    PARTSUPP ps ON p.P_PARTKEY = ps.PS_PARTKEY
+    PARTSUPP ps ON p.part_key = ps.part_key
 ORDER BY
     fo.O_ORDERDATE
