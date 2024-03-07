@@ -1,3 +1,10 @@
+{{
+    config(
+        materialized='table',
+        cluster_by=['o_orderdate']
+    )
+}}
+
 with mid_orders_line AS(
     SELECT
         li.L_ORDERKEY,

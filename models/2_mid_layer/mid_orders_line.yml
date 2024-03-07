@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: mid_orders_line
+    columns:
+      - name: L_ORDERKEY
+        tests:
+          - dbt_expectations.expect_column_values_to_be_unique
+          - not_null

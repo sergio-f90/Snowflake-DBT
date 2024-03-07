@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: dim_customers
+    columns:
+      - name: c_custkey
+        tests:
+          - unique
+          - not_null
+                
+
+  - name: dim_suppliers
+    columns:
+      - name: part_supplier_key
+        tests:
+          - unique
+          - not_null
+                
+  - name: fact_orders_line
+    columns:
+      - name: O_ORDERKEY
+        tests:
+          - unique
+          - not_null

@@ -2,8 +2,8 @@
 
 WITH part_psup_sup AS (
     select 
-        ps.PS_SUPPKEY, 
-        p.P_PARTKEY,
+        ps.part_supplier_key, 
+        p.part_key,
         p.P_NAME,
         p.P_BRAND,
         p.P_NAME as part_name,
@@ -12,7 +12,7 @@ WITH part_psup_sup AS (
         p.p_retailprice,
         ps.PS_AVAILQTY,
         ps.PS_SUPPLYCOST,
-        s.S_SUPPKEY,
+        s.supplier_key,
         s.S_NAME,
         s.S_ADDRESS,
         s.S_ACCTBAL,
@@ -25,10 +25,10 @@ WITH part_psup_sup AS (
         part p
         join
         partsupp ps
-            on p.P_PARTKEY = ps.PS_PARTKEY
+            on p.part_key = ps.part_key
         join
         supplier s
-            on ps.PS_SUPPKEY = s.S_SUPPKEY
+            on ps.supplier_key = s.supplier_key
         join
         nation n
             on s.S_NATIONKEY = n.n_nationkey
@@ -41,4 +41,4 @@ select
 from
     part_psup_sup
 order by
-    S_SUPPKEY
+    part_key
