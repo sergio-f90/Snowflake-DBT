@@ -5,7 +5,7 @@
     )
 }}
 
-with mid_orders_line AS(
+with mid_orders_line AS (
     SELECT
         li.L_ORDERKEY,
         o.O_ORDERKEY,
@@ -27,9 +27,9 @@ with mid_orders_line AS(
         li.L_TAX,--tasa impuestos artículo
         ((li.L_EXTENDEDPRICE + (-1 * li.L_EXTENDEDPRICE * li.L_DISCOUNT)) * li.L_TAX) AS item_tax_amount -- cantidad total del impuesto calculado sobre el precio del artículo después de aplicar cualquier descuento
     FROM
-        tpch.orders o
+        tpch.lineitem li
     JOIN
-        tpch.lineitem li ON o.O_ORDERKEY = li.L_ORDERKEY
+        tpch.orders o ON o.O_ORDERKEY = li.L_ORDERKEY
     ORDER BY
         o.O_ORDERDATE
 )

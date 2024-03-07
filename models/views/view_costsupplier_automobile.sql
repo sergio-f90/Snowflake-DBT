@@ -1,5 +1,6 @@
 {{ config(materialized = 'view') }}
--- Promedio del costo de suministro del proveedor para las partes de tipo AUTOMOBILE
+-- Esta vista calcula el total de ventas por artículo y el promedio del costo de suministro por proveedor 
+--para las órdenes con O_ORDERDATE desde el 1 de enero de 1992 hasta el 31 de diciembre de 1993 y donde el C_MKTSEGMENT sea "AUTOMOBILE".
 SELECT
     fo.O_ORDERKEY,
     fo.O_ORDERDATE,
@@ -20,7 +21,7 @@ SELECT
     p.P_CONTAINER AS PART_CONTAINER,
     ps.PS_SUPPLYCOST,
     -- Calcular el total de ventas por artículo
-    SUM(fo.ORDER_COUNT * (p.P_RETAILPRICE - fo.ITEM_DISCOUNTED_AMOUNT)) OVER (PARTITION BY p.part_key) AS total_sales_per_part,
+    SUM(fo.ORDER_COUNT * ( fo.ITEM_DISCOUNTED_AMOUNT- p.P_RETAILPRICE )) OVER (PARTITION BY p.part_key) AS total_sales_per_part,
     -- Calcular el promedio del costo de suministro por proveedor
     --AVG(ps.PS_SUPPLYCOST) OVER (PARTITION BY s.supplier_key) AS avg_supply_cost_per_supplier
     AVG(ps.PS_SUPPLYCOST) OVER (PARTITION BY ps.supplier_key) AS avg_supply_cost_per_supplier
