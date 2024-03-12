@@ -10,3 +10,4 @@ With orders AS (
    FROM tpch.orders
 )
 Select * from orders
+
